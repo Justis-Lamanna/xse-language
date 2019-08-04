@@ -20,7 +20,7 @@ public interface Command {
      * Get the parameters of the command
      * @return The parameters of the command
      */
-    CommandParameters getParameters();
+    ReadOnlyIterable<? extends ParameterDescription<?>> getParameters();
 
     /**
      * Get the number of byte the command takes in ROM.

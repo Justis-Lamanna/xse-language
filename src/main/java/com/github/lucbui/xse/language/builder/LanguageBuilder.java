@@ -8,10 +8,9 @@ import java.util.*;
  * Helper class to create a Language
  */
 public class LanguageBuilder {
-    Map<String, Command> commandByName;
-    Map<String, List<Command>> commandVariantsByName;
-
-    private int commandId = -1;
+    Map<String, BasicCommand> commandByName;
+    Map<String, List<VariantCommand>> commandVariantsByName;
+    Map<String, PreprocessingDirective> preprocessingDirectivesByName;
 
     /**
      * Create a LanguageBuilder
@@ -19,6 +18,7 @@ public class LanguageBuilder {
     public LanguageBuilder(){
         this.commandByName = new HashMap<>();
         this.commandVariantsByName = new HashMap<>();
+        this.preprocessingDirectivesByName = new HashMap<>();
     }
 
     /**
@@ -29,8 +29,8 @@ public class LanguageBuilder {
      * @return This instance, for chaining
      * @see BasicCommandBuilder
      */
-    public LanguageBuilder withCommand(Builder<? extends Command> builder){
-        Command command = builder.build();
+    public LanguageBuilder withCommand(Builder<? extends BasicCommand> builder){
+        BasicCommand command = builder.build();
         if(this.commandByName.containsKey(command.getName())){
             throw new IllegalArgumentException("Map already contains key for " + command.getName() + ". If attempting to do variant commands, use withVariantCommand()");
         }
@@ -46,8 +46,8 @@ public class LanguageBuilder {
      * @return This instance, for chaining
      * @see BasicCommandBuilder
      */
-    public LanguageBuilder overrideCommand(Builder<? extends Command> builder){
-        Command command = builder.build();
+    public LanguageBuilder overrideCommand(Builder<? extends BasicCommand> builder){
+        BasicCommand command = builder.build();
         this.commandByName.put(command.getName(), command);
         return this;
     }
@@ -70,8 +70,8 @@ public class LanguageBuilder {
      * @return This instance, for chaining
      * @see VariantCommandBuilder
      */
-    public LanguageBuilder withVariantCommand(Builder<? extends Collection<? extends Command>> builder){
-        for(Command command : builder.build()){
+    public LanguageBuilder withVariantCommand(Builder<? extends Collection<? extends VariantCommand>> builder){
+        for(VariantCommand command : builder.build()){
             this.commandVariantsByName.computeIfAbsent(command.getName(), s -> new ArrayList<>()).add(command);
         }
         return this;
@@ -86,26 +86,95 @@ public class LanguageBuilder {
      * @return This instance, for chaining
      * @see VariantCommandBuilder
      */
-    public LanguageBuilder overrideVariantCommand(Builder<? extends Collection<? extends Command>> builder){
-        Collection<? extends Command> commands = builder.build();
+    public LanguageBuilder overrideVariantCommand(Builder<? extends Collection<? extends VariantCommand>> builder){
+        Collection<? extends VariantCommand> commands = builder.build();
         commands.stream()
                 .map(Command::getName)
                 .distinct()
                 .forEach(name -> this.commandVariantsByName.remove(name));
 
-        for(Command command : commands){
+        for(VariantCommand command : commands){
             this.commandVariantsByName.computeIfAbsent(command.getName(), s -> new ArrayList<>()).add(command);
         }
         return this;
     }
 
     /**
-     * Delete all variant commands to the language
+     * Delete all variant commands to the language with this name
      * @param name The name of the command to delete
      * @return This instance, for chaining
      */
     public LanguageBuilder deleteVariantCommand(String name){
         this.commandVariantsByName.remove(name);
+        return this;
+    }
+
+    /**
+     * Adds a preprocessing directive to the language.
+     * A preprocessing directive is used to modify the compiler functionality in some way. These are not compiled into
+     * the script.
+     * @param builder A builder which creates a Preprocessing directive
+     * @return This instance, for chaining
+     */
+    public LanguageBuilder withPreprocessingDirective(Builder<? extends PreprocessingDirective> builder){
+        PreprocessingDirective directive = builder.build();
+        if(this.preprocessingDirectivesByName.containsKey(directive.getName())){
+            throw new IllegalArgumentException("Map already contains key for " + directive.getName() + ".");
+        }
+        for(String alias : directive.getAliases()){
+            if (this.preprocessingDirectivesByName.containsKey(alias)) {
+                throw new IllegalArgumentException("Map already contains key for " + alias + ".");
+            }
+        }
+
+        this.preprocessingDirectivesByName.put(directive.getName(), directive);
+        for(String alias : directive.getAliases()){
+            this.preprocessingDirectivesByName.put(alias, directive);
+        }
+
+        return this;
+    }
+
+    /**
+     * Modify a preprocessing directive for a language.
+     * A preprocessing directive is used to modify the compiler functionality in some way. These are not compiled into
+     * the script. All old aliases are removed.
+     * @param builder A builder which builds multiple commands
+     * @return This instance, for chaining
+     * @see VariantCommandBuilder
+     */
+    public LanguageBuilder overridePreprocessingDirective(Builder<? extends PreprocessingDirective> builder){
+        PreprocessingDirective directive = builder.build();
+        PreprocessingDirective oldDirective = this.preprocessingDirectivesByName.remove(directive.getName());
+        if(oldDirective != null) {
+            for (String alias : oldDirective.getAliases()) {
+                this.preprocessingDirectivesByName.remove(alias);
+            }
+        }
+
+        this.preprocessingDirectivesByName.put(directive.getName(), directive);
+        for(String alias : directive.getAliases()){
+            this.preprocessingDirectivesByName.put(alias, directive);
+        }
+
+        return this;
+    }
+
+    /**
+     * Delete a preprocessing directive from the language
+     * All aliases are deleted as well.
+     * @param name The name of the command to delete
+     * @return This instance, for chaining
+     */
+    public LanguageBuilder deletePreprocessingDirective(String name){
+        PreprocessingDirective directive = this.preprocessingDirectivesByName.get(name);
+        if(directive != null){
+            this.preprocessingDirectivesByName.remove(name);
+            for(String alias : directive.getAliases()){
+                this.preprocessingDirectivesByName.remove(alias);
+            }
+        }
+
         return this;
     }
 

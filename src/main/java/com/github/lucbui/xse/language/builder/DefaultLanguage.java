@@ -1,7 +1,6 @@
 package com.github.lucbui.xse.language.builder;
 
-import com.github.lucbui.xse.language.Command;
-import com.github.lucbui.xse.language.Language;
+import com.github.lucbui.xse.language.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,12 +11,14 @@ import java.util.stream.Stream;
  */
 class DefaultLanguage implements Language {
     //Enhancement one day: Combine these?
-    private final Map<String, List<Command>> commandVariantsByName;
-    private Map<String, Command> commandsByName;
+    private final Map<String, List<VariantCommand>> commandVariantsByName;
+    private Map<String, BasicCommand> commandsByName;
+    private Map<String, PreprocessingDirective> preprocessingDirectivesByName;
 
     DefaultLanguage(LanguageBuilder lb){
         this.commandsByName = lb.commandByName;
         this.commandVariantsByName = lb.commandVariantsByName;
+        this.preprocessingDirectivesByName = lb.preprocessingDirectivesByName;
     }
 
     @Override

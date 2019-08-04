@@ -1,8 +1,8 @@
 package com.github.lucbui.xse.language.builder;
 
-import com.github.lucbui.xse.language.CommandParameter;
-import com.github.lucbui.xse.language.CommandParameters;
-import com.github.lucbui.xse.language.IParameter;
+import com.github.lucbui.xse.language.ParameterDescription;
+import com.github.lucbui.xse.language.ReadOnlyIterable;
+import com.github.lucbui.xse.language.SizedParameter;
 import com.github.lucbui.xse.language.VariantCommand;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 public class VariantBuilder implements CommandBuilder<VariantBuilder, VariantCommand> {
     String name;
     String description;
-    List<CommandParameter> parameters;
+    List<ParameterDescription<SizedParameter>> parameters;
     int variantParameterValue;
 
     public VariantBuilder(int variantParameterValue) {
@@ -32,14 +32,14 @@ public class VariantBuilder implements CommandBuilder<VariantBuilder, VariantCom
     }
 
     @Override
-    public VariantBuilder withParam(IParameter IParameter, String description) {
-        this.parameters.add(new CommandParameter(IParameter, description));
+    public VariantBuilder withParam(SizedParameter SizedParameter, String description) {
+        this.parameters.add(new ParameterDescription<>(SizedParameter, description));
         return this;
     }
 
     @Override
     public VariantCommand build() {
-        return new VariantCommand(this.name, this.description, new CommandParameters(this.parameters),
+        return new VariantCommand(this.name, this.description, new ReadOnlyIterable<>(this.parameters),
                 this.variantParameterValue);
     }
 }

@@ -8,11 +8,11 @@ import java.util.List;
 public class VariantCommandBuilder implements CommandBuilder<VariantCommandBuilder, List<VariantCommand>>{
     private String name;
     private String description;
-    private List<CommandParameter> parameters;
+    private List<ParameterDescription<SizedParameter>> parameters;
 
     private List<VariantCommand> variants;
 
-    public VariantCommandBuilder(String name, String description, List<CommandParameter> parameters) {
+    public VariantCommandBuilder(String name, String description, List<ParameterDescription<SizedParameter>> parameters) {
         this.name = name;
         this.description = description;
         this.parameters = parameters;
@@ -33,15 +33,15 @@ public class VariantCommandBuilder implements CommandBuilder<VariantCommandBuild
     }
 
     @Override
-    public VariantCommandBuilder withParam(IParameter IParameter, String description) {
-        this.parameters.add(new CommandParameter(IParameter, description));
+    public VariantCommandBuilder withParam(SizedParameter SizedParameter, String description) {
+        this.parameters.add(new ParameterDescription<>(SizedParameter, description));
         return this;
     }
 
     public VariantCommandBuilder withVariant(VariantBuilder builder){
-        List<CommandParameter> parameters = new ArrayList<>(this.parameters);
+        List<ParameterDescription<SizedParameter>> parameters = new ArrayList<>(this.parameters);
         parameters.addAll(builder.parameters);
-        VariantCommand command = new VariantCommand(this.name, builder.description, new CommandParameters(parameters), builder.variantParameterValue);
+        VariantCommand command = new VariantCommand(this.name, builder.description, new ReadOnlyIterable<>(parameters), builder.variantParameterValue);
         variants.add(command);
         return this;
     }

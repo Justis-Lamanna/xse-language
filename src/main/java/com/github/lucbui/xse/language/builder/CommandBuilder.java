@@ -1,6 +1,6 @@
 package com.github.lucbui.xse.language.builder;
 
-import com.github.lucbui.xse.language.IParameter;
+import com.github.lucbui.xse.language.SizedParameter;
 
 /**
  * A common interface which is used by CommandBuilders
@@ -17,9 +17,9 @@ public interface CommandBuilder<SELF, BUILT> extends Builder<BUILT>{
 
     /**
      * Adds a new command parameter
-     * @param IParameter The parameter
+     * @param sizedParameter The parameter
      * @param description The description of the parameter
      * @return This instance, or a new instance
      */
-    SELF withParam(IParameter IParameter, String description);
+    SELF withParam(SizedParameter sizedParameter, String description);
 }

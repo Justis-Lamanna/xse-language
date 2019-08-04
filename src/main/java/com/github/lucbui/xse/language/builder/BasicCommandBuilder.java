@@ -1,9 +1,6 @@
 package com.github.lucbui.xse.language.builder;
 
-import com.github.lucbui.xse.language.BasicCommand;
-import com.github.lucbui.xse.language.CommandParameter;
-import com.github.lucbui.xse.language.CommandParameters;
-import com.github.lucbui.xse.language.IParameter;
+import com.github.lucbui.xse.language.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.List;
 public class BasicCommandBuilder implements CommandBuilder<BasicCommandBuilder, BasicCommand>{
     private String name;
     private String description;
-    private List<CommandParameter> parameters;
+    private List<ParameterDescription<SizedParameter>> parameters;
 
     public BasicCommandBuilder(String name){
         this.name = name;
@@ -34,18 +31,18 @@ public class BasicCommandBuilder implements CommandBuilder<BasicCommandBuilder, 
 
     /**
      * Add a parameter to this command
-     * @param IParameter The parameter type
+     * @param SizedParameter The parameter type
      * @param description The parameter description
      * @return This builder
      */
     @Override
-    public BasicCommandBuilder withParam(IParameter IParameter, String description){
-        parameters.add(new CommandParameter(IParameter, description));
+    public BasicCommandBuilder withParam(SizedParameter SizedParameter, String description){
+        parameters.add(new ParameterDescription<>(SizedParameter, description));
         return this;
     }
 
     @Override
     public BasicCommand build(){
-        return new BasicCommand(name, description, new CommandParameters(parameters));
+        return new BasicCommand(name, description, new ReadOnlyIterable<>(parameters));
     }
 }

@@ -1,5 +1,5 @@
 package com.github.lucbui.xse.language;
 
-public interface IParameter {
+public interface SizedParameter extends Parameter{
     int getNumberOfBytes();
 }

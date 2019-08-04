@@ -1,5 +1,6 @@
 package com.github.lucbui.xse.language;
 
+
 import java.util.Objects;
 
 /**
@@ -11,7 +12,7 @@ public class BasicCommand implements Command {
 
     private String name;
     private String description;
-    private CommandParameters parameters;
+    private ReadOnlyIterable<ParameterDescription<SizedParameter>> parameters;
 
     /**
      * Create a basic command
@@ -19,7 +20,7 @@ public class BasicCommand implements Command {
      * @param description The description of the command
      * @param parameters The parameters this command takes.
      */
-    public BasicCommand(String name, String description, CommandParameters parameters) {
+    public BasicCommand(String name, String description, ReadOnlyIterable<ParameterDescription<SizedParameter>> parameters) {
         this.name = name;
         this.description = description;
         this.parameters = Objects.requireNonNull(parameters);
@@ -36,7 +37,7 @@ public class BasicCommand implements Command {
     }
 
     @Override
-    public CommandParameters getParameters() {
+    public ReadOnlyIterable<ParameterDescription<SizedParameter>> getParameters() {
         return parameters;
     }
 
