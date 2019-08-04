@@ -8,19 +8,20 @@ import com.github.lucbui.xse.language.VariantCommand;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Builds one variant
+ */
 public class VariantBuilder implements CommandBuilder<VariantBuilder, VariantCommand> {
     String name;
     String description;
     List<ParameterDescription<SizedParameter>> parameters;
     int variantParameterValue;
 
+    /**
+     * Initializes a variant with its variant number
+     * @param variantParameterValue The variant number
+     */
     public VariantBuilder(int variantParameterValue) {
-        this.variantParameterValue = variantParameterValue;
-        this.parameters = new ArrayList<>();
-    }
-
-    public VariantBuilder(String name, int variantParameterValue){
-        this.name = name;
         this.variantParameterValue = variantParameterValue;
         this.parameters = new ArrayList<>();
     }

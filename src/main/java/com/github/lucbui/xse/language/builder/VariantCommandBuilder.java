@@ -5,6 +5,9 @@ import com.github.lucbui.xse.language.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A builder which creates variant commands
+ */
 public class VariantCommandBuilder implements CommandBuilder<VariantCommandBuilder, List<VariantCommand>>{
     private String name;
     private String description;
@@ -12,14 +15,10 @@ public class VariantCommandBuilder implements CommandBuilder<VariantCommandBuild
 
     private List<VariantCommand> variants;
 
-    public VariantCommandBuilder(String name, String description, List<ParameterDescription<SizedParameter>> parameters) {
-        this.name = name;
-        this.description = description;
-        this.parameters = parameters;
-
-        this.variants = new ArrayList<>();
-    }
-
+    /**
+     * Initializes a variant command with a name
+     * @param name The name of the command
+     */
     public VariantCommandBuilder(String name) {
         this.name = name;
         this.parameters = new ArrayList<>();
@@ -38,6 +37,11 @@ public class VariantCommandBuilder implements CommandBuilder<VariantCommandBuild
         return this;
     }
 
+    /**
+     * Adds a variant to this builder.
+     * @param builder A builder which constructs a variant
+     * @return This instance
+     */
     public VariantCommandBuilder withVariant(VariantBuilder builder){
         List<ParameterDescription<SizedParameter>> parameters = new ArrayList<>(this.parameters);
         parameters.addAll(builder.parameters);

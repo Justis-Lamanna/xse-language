@@ -1,6 +1,6 @@
 package com.github.lucbui.xse;
 
-import com.github.lucbui.xse.language.AliasParameter;
+import com.github.lucbui.xse.language.DirectiveParameter;
 import com.github.lucbui.xse.language.CommandParameter;
 import com.github.lucbui.xse.language.Language;
 import com.github.lucbui.xse.language.builder.*;
@@ -15,11 +15,11 @@ public class XseLanguage {
     public static final Language V1  = new LanguageBuilder()
 			.withPreprocessingDirective(new PreprocessingDirectiveBuilder("alias")
 					.withDescription("Enables replacement symbols which can be used while compiling scripts")
-					.withParam(AliasParameter.ANYTHING, "Symbol")
-					.withParam(AliasParameter.ANYTHING, "Alias"))
+					.withParam(DirectiveParameter.ANYTHING, "Symbol")
+					.withParam(DirectiveParameter.ANYTHING, "Alias"))
 			.withPreprocessingDirective(new PreprocessingDirectiveBuilder("autobank")
 					.withDescription("Turns on or off autobanking. When turned on, the extra 0x08/0x09 bank is automatically added to any pointer if the pointer doesn't have a bank already. By default autobanking is enabled. Anyway, #org is not affected by this directive")
-					.withParam(AliasParameter.ON_OFF, "Whether autobank is turned on or off"))
+					.withParam(DirectiveParameter.ON_OFF, "Whether autobank is turned on or off"))
 			.withCommand(new BasicCommandBuilder("nop")
 					.withDescription("Does absolutely nothing"))
 			.withCommand(new BasicCommandBuilder("nop1")
