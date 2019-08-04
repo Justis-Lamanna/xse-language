@@ -12,6 +12,8 @@ public class LanguageBuilder {
     Map<String, List<VariantCommand>> commandVariantsByName;
     Map<String, PreprocessingDirective> preprocessingDirectivesByName;
 
+    String directivePrefix = "#";
+
     /**
      * Create a LanguageBuilder
      */
@@ -184,5 +186,10 @@ public class LanguageBuilder {
      */
     public Language build() {
         return new DefaultLanguage(this);
+    }
+
+    public LanguageBuilder withPreprocessingDirectivePrefix(String s) {
+        directivePrefix = s;
+        return this;
     }
 }

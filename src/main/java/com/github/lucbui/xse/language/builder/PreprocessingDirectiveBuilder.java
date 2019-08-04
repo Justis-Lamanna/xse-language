@@ -43,7 +43,7 @@ public class PreprocessingDirectiveBuilder implements Builder<PreprocessingDirec
      * @param description The description of the parameter
      * @return This instance
      */
-    public PreprocessingDirectiveBuilder withParam(DirectiveParameter parameter, String description){
+    public PreprocessingDirectiveBuilder withParam(Parameter parameter, String description){
         this.parameters.add(new ParameterDescription<>(parameter, description));
         return this;
     }
