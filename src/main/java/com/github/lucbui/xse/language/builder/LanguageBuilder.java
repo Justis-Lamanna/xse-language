@@ -2,6 +2,7 @@ package com.github.lucbui.xse.language.builder;
 
 import com.github.lucbui.xse.language.*;
 
+import javax.crypto.Mac;
 import java.util.*;
 
 /**
@@ -11,6 +12,7 @@ public class LanguageBuilder {
     Map<String, BasicCommand> commandByName;
     Map<String, List<VariantCommand>> commandVariantsByName;
     Map<String, PreprocessingDirective> preprocessingDirectivesByName;
+    Map<String, MacroCommand> macrosByName;
 
     String directivePrefix = "#";
 
@@ -32,7 +34,7 @@ public class LanguageBuilder {
      * @see BasicCommandBuilder
      */
     public LanguageBuilder withCommand(Builder<? extends BasicCommand> builder){
-        BasicCommand command = builder.build();
+        BasicCommand command = builder.build(this);
         if(this.commandByName.containsKey(command.getName())){
             throw new IllegalArgumentException("Map already contains key for " + command.getName() + ". If attempting to do variant commands, use withVariantCommand()");
         }
@@ -49,7 +51,7 @@ public class LanguageBuilder {
      * @see BasicCommandBuilder
      */
     public LanguageBuilder overrideCommand(Builder<? extends BasicCommand> builder){
-        BasicCommand command = builder.build();
+        BasicCommand command = builder.build(this);
         this.commandByName.put(command.getName(), command);
         return this;
     }
@@ -73,7 +75,7 @@ public class LanguageBuilder {
      * @see VariantCommandBuilder
      */
     public LanguageBuilder withVariantCommand(Builder<? extends Collection<? extends VariantCommand>> builder){
-        for(VariantCommand command : builder.build()){
+        for(VariantCommand command : builder.build(this)){
             this.commandVariantsByName.computeIfAbsent(command.getName(), s -> new ArrayList<>()).add(command);
         }
         return this;
@@ -89,7 +91,7 @@ public class LanguageBuilder {
      * @see VariantCommandBuilder
      */
     public LanguageBuilder overrideVariantCommand(Builder<? extends Collection<? extends VariantCommand>> builder){
-        Collection<? extends VariantCommand> commands = builder.build();
+        Collection<? extends VariantCommand> commands = builder.build(this);
         commands.stream()
                 .map(Command::getName)
                 .distinct()
@@ -119,7 +121,7 @@ public class LanguageBuilder {
      * @return This instance, for chaining
      */
     public LanguageBuilder withPreprocessingDirective(Builder<? extends PreprocessingDirective> builder){
-        PreprocessingDirective directive = builder.build();
+        PreprocessingDirective directive = builder.build(this);
         if(this.preprocessingDirectivesByName.containsKey(directive.getName())){
             throw new IllegalArgumentException("Map already contains key for " + directive.getName() + ".");
         }
@@ -146,7 +148,7 @@ public class LanguageBuilder {
      * @see VariantCommandBuilder
      */
     public LanguageBuilder overridePreprocessingDirective(Builder<? extends PreprocessingDirective> builder){
-        PreprocessingDirective directive = builder.build();
+        PreprocessingDirective directive = builder.build(this);
         PreprocessingDirective oldDirective = this.preprocessingDirectivesByName.remove(directive.getName());
         if(oldDirective != null) {
             for (String alias : oldDirective.getAliases()) {
@@ -177,6 +179,45 @@ public class LanguageBuilder {
             }
         }
 
+        return this;
+    }
+
+    /**
+     * Adds a macro command.
+     * A macro command encapsulates several Basic Commands in one. When compiled and decompiled, these macros are used
+     * in preference to the string of regular commands, if possible.
+     * @param builder The builder which creates a macro command
+     * @return This instace, for chaining
+     */
+    public LanguageBuilder withMacroCommand(Builder<? extends MacroCommand> builder){
+        MacroCommand command = builder.build(this);
+        if(this.macrosByName.containsKey(command.getName())){
+            throw new IllegalArgumentException("Map already contains key for " + command.getName() + ".");
+        }
+        this.macrosByName.put(command.getName(), command);
+        return this;
+    }
+
+    /**
+     * Override a macro command.
+     * A macro command encapsulates several Basic Commands in one. When compiled and decompiled, these macros are used
+     * in preference to the string of regular commands, if possible.
+     * @param builder The builder which creates a macro command
+     * @return This instance, for chaining
+     */
+    public LanguageBuilder overrideMacroCommand(Builder<? extends MacroCommand> builder){
+        MacroCommand command = builder.build(this);
+        this.macrosByName.put(command.getName(), command);
+        return this;
+    }
+
+    /**
+     * Delete a macro command
+     * @param name The command to delete
+     * @return This instance, for chaining
+     */
+    public LanguageBuilder deleteMacroComand(String name){
+        this.macrosByName.remove(name);
         return this;
     }
 

@@ -10,4 +10,13 @@ public interface Builder<BUILT> {
      * @return The built object
      */
     BUILT build();
+
+    /**
+     * Build the object this builder is supposed to build
+     * @param builder The Language Builder, in the case additional context is needed
+     * @return The built object
+     */
+    default BUILT build(LanguageBuilder builder){
+        return build();
+    }
 }
