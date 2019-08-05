@@ -1,6 +1,8 @@
 package com.github.lucbui.xse.language;
 
 
+import com.github.lucbui.xse.language.parameter.SizedParameter;
+
 import java.util.Objects;
 
 /**

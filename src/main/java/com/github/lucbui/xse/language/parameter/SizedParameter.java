@@ -1,4 +1,4 @@
-package com.github.lucbui.xse.language;
+package com.github.lucbui.xse.language.parameter;
 
 /**
  * A parameter that has a compiled size

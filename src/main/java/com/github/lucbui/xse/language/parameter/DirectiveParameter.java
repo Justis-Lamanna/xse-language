@@ -1,4 +1,4 @@
-package com.github.lucbui.xse.language;
+package com.github.lucbui.xse.language.parameter;
 
 /**
  * Parameters for preprocessing directives
@@ -31,5 +31,9 @@ public enum DirectiveParameter implements Parameter {
     /**
      * This parameter can be a pointer, or a label to be dynamically found
      */
-    POINTER_OR_LABEL
+    POINTER_OR_LABEL,
+    /**
+     * This parameter specifies the data type of the following values
+     */
+    DATA_TYPE;
 }

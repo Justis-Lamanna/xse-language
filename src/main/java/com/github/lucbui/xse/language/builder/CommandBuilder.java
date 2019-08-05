@@ -1,6 +1,6 @@
 package com.github.lucbui.xse.language.builder;
 
-import com.github.lucbui.xse.language.SizedParameter;
+import com.github.lucbui.xse.language.parameter.SizedParameter;
 
 /**
  * A common interface which is used by CommandBuilders

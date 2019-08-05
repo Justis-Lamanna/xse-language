@@ -1,5 +1,7 @@
 package com.github.lucbui.xse.language;
 
+import com.github.lucbui.xse.language.parameter.Parameter;
+
 /**
  * Encapsulates a command parameter.
  */

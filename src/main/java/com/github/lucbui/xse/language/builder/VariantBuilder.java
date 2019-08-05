@@ -2,7 +2,7 @@ package com.github.lucbui.xse.language.builder;
 
 import com.github.lucbui.xse.language.ParameterDescription;
 import com.github.lucbui.xse.language.ReadOnlyIterable;
-import com.github.lucbui.xse.language.SizedParameter;
+import com.github.lucbui.xse.language.parameter.SizedParameter;
 import com.github.lucbui.xse.language.VariantCommand;
 
 import java.util.ArrayList;

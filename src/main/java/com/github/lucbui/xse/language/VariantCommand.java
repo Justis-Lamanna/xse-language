@@ -1,5 +1,7 @@
 package com.github.lucbui.xse.language;
 
+import com.github.lucbui.xse.language.parameter.SizedParameter;
+
 /**
  * A variant command
  * A variant command is several Basic Commands with the same name, but a different footprint.

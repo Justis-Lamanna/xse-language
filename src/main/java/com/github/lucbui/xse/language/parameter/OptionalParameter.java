@@ -1,4 +1,4 @@
-package com.github.lucbui.xse.language;
+package com.github.lucbui.xse.language.parameter;
 
 public class OptionalParameter implements Parameter {
     private Parameter type;

@@ -1,5 +1,7 @@
 package com.github.lucbui.xse.language;
 
+import com.github.lucbui.xse.language.parameter.Parameter;
+
 /**
  * A preprocessing directive
  * A preprocessing directive dictates to the compiler how it should act. These are not compiled, so inherently have no size.

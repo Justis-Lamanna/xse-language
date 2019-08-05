@@ -1,4 +1,4 @@
-package com.github.lucbui.xse.language;
+package com.github.lucbui.xse.language.parameter;
 
 /**
  * The type of parameter passed into an XSE command
@@ -28,10 +28,6 @@ public enum CommandParameter implements SizedParameter {
      * A pointer, which takes 4 bytes
      */
     POINTER(4),
-    /**
-     * A variable ID, or a constant word value
-     */
-    VARIABLE_OR_WORD(2),
     /**
      * The ID of a Pokémon species
      */
