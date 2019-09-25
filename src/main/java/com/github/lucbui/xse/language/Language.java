@@ -11,7 +11,7 @@ public interface Language {
      * @param commandName The command's name
      * @return The command
      */
-    List<? extends Command> getCommandByName(String commandName);
+    List<? extends BasicCommand> getCommandByName(String commandName);
 
     /**
      * Get all commands

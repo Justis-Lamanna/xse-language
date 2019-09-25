@@ -11,10 +11,6 @@ import java.util.*;
 public class LanguageBuilder {
     Map<String, BasicCommand> commandByName;
     Map<String, List<VariantCommand>> commandVariantsByName;
-    Map<String, PreprocessingDirective> preprocessingDirectivesByName;
-    Map<String, MacroCommand> macrosByName;
-
-    String directivePrefix = "#";
 
     /**
      * Create a LanguageBuilder
@@ -22,7 +18,6 @@ public class LanguageBuilder {
     public LanguageBuilder(){
         this.commandByName = new HashMap<>();
         this.commandVariantsByName = new HashMap<>();
-        this.preprocessingDirectivesByName = new HashMap<>();
     }
 
     /**
@@ -114,123 +109,10 @@ public class LanguageBuilder {
     }
 
     /**
-     * Adds a preprocessing directive to the language.
-     * A preprocessing directive is used to modify the compiler functionality in some way. These are not compiled into
-     * the script.
-     * @param builder A builder which creates a Preprocessing directive
-     * @return This instance, for chaining
-     */
-    public LanguageBuilder withPreprocessingDirective(Builder<? extends PreprocessingDirective> builder){
-        PreprocessingDirective directive = builder.build(this);
-        if(this.preprocessingDirectivesByName.containsKey(directive.getName())){
-            throw new IllegalArgumentException("Map already contains key for " + directive.getName() + ".");
-        }
-        for(String alias : directive.getAliases()){
-            if (this.preprocessingDirectivesByName.containsKey(alias)) {
-                throw new IllegalArgumentException("Map already contains key for " + alias + ".");
-            }
-        }
-
-        this.preprocessingDirectivesByName.put(directive.getName(), directive);
-        for(String alias : directive.getAliases()){
-            this.preprocessingDirectivesByName.put(alias, directive);
-        }
-
-        return this;
-    }
-
-    /**
-     * Modify a preprocessing directive for a language.
-     * A preprocessing directive is used to modify the compiler functionality in some way. These are not compiled into
-     * the script. All old aliases are removed.
-     * @param builder A builder which builds multiple commands
-     * @return This instance, for chaining
-     * @see VariantCommandBuilder
-     */
-    public LanguageBuilder overridePreprocessingDirective(Builder<? extends PreprocessingDirective> builder){
-        PreprocessingDirective directive = builder.build(this);
-        PreprocessingDirective oldDirective = this.preprocessingDirectivesByName.remove(directive.getName());
-        if(oldDirective != null) {
-            for (String alias : oldDirective.getAliases()) {
-                this.preprocessingDirectivesByName.remove(alias);
-            }
-        }
-
-        this.preprocessingDirectivesByName.put(directive.getName(), directive);
-        for(String alias : directive.getAliases()){
-            this.preprocessingDirectivesByName.put(alias, directive);
-        }
-
-        return this;
-    }
-
-    /**
-     * Delete a preprocessing directive from the language
-     * All aliases are deleted as well.
-     * @param name The name of the command to delete
-     * @return This instance, for chaining
-     */
-    public LanguageBuilder deletePreprocessingDirective(String name){
-        PreprocessingDirective directive = this.preprocessingDirectivesByName.get(name);
-        if(directive != null){
-            this.preprocessingDirectivesByName.remove(name);
-            for(String alias : directive.getAliases()){
-                this.preprocessingDirectivesByName.remove(alias);
-            }
-        }
-
-        return this;
-    }
-
-    /**
-     * Adds a macro command.
-     * A macro command encapsulates several Basic Commands in one. When compiled and decompiled, these macros are used
-     * in preference to the string of regular commands, if possible.
-     * @param builder The builder which creates a macro command
-     * @return This instace, for chaining
-     */
-    public LanguageBuilder withMacroCommand(Builder<? extends MacroCommand> builder){
-        MacroCommand command = builder.build(this);
-        if(this.macrosByName.containsKey(command.getName())){
-            throw new IllegalArgumentException("Map already contains key for " + command.getName() + ".");
-        }
-        this.macrosByName.put(command.getName(), command);
-        return this;
-    }
-
-    /**
-     * Override a macro command.
-     * A macro command encapsulates several Basic Commands in one. When compiled and decompiled, these macros are used
-     * in preference to the string of regular commands, if possible.
-     * @param builder The builder which creates a macro command
-     * @return This instance, for chaining
-     */
-    public LanguageBuilder overrideMacroCommand(Builder<? extends MacroCommand> builder){
-        MacroCommand command = builder.build(this);
-        this.macrosByName.put(command.getName(), command);
-        return this;
-    }
-
-    /**
-     * Delete a macro command
-     * @param name The command to delete
-     * @return This instance, for chaining
-     */
-    public LanguageBuilder deleteMacroComand(String name){
-        this.macrosByName.remove(name);
-        return this;
-    }
-
-    /**
      * Build the language
      * @return The built language
      */
     public Language build() {
         return new DefaultLanguage(this);
-    }
-
-    public LanguageBuilder withPreprocessingDirectivePrefix(String s) {
-        directivePrefix = s;
-        return this;
     }
 }
